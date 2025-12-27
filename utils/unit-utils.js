@@ -35,3 +35,4 @@ function getInteger(value) {
   if (metric === "B") return parseInt(value.slice(0, -1) * 1e9);
   return parseInt(value);
 }
+

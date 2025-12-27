@@ -172,3 +172,4 @@ function list(array) {
   const conjunction = new Intl.ListFormat(window.lang || "en", {style: "long", type: "conjunction"});
   return conjunction.format(array);
 }
+

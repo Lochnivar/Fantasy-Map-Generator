@@ -28,3 +28,4 @@ function getAbsolutePath(href) {
   link.href = href;
   return link.href;
 }
+

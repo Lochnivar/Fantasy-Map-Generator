@@ -114,3 +114,13 @@ window.Lakes = (function () {
 
   return {defineClimateData, cleanupLakeData, detectCloseLakes, getHeight, getName};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Lakes = Lakes;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Lakes = Lakes;

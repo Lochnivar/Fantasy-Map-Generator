@@ -63,7 +63,7 @@ function biased(min, max, ex) {
 // get number from string in format "1-3" or "2" or "0.5"
 function getNumberInRange(r) {
   if (typeof r !== "string") {
-    ERROR && console.error("Range value should be a string", r);
+    FMG.Utils.Logger.error("Range value should be a string", r);
     return 0;
   }
   if (!isNaN(+r)) return ~~r + +P(r - ~~r);
@@ -71,12 +71,12 @@ function getNumberInRange(r) {
   if (isNaN(+r[0])) r = r.slice(1);
   const range = r.includes("-") ? r.split("-") : null;
   if (!range) {
-    ERROR && console.error("Cannot parse the number. Check the format", r);
+    FMG.Utils.Logger.error("Cannot parse the number. Check the format", r);
     return 0;
   }
   const count = rand(range[0] * sign, +range[1]);
   if (isNaN(count) || count < 0) {
-    ERROR && console.error("Cannot parse number. Check the format", r);
+    FMG.Utils.Logger.error("Cannot parse number. Check the format", r);
     return 0;
   }
   return count;
@@ -85,3 +85,4 @@ function getNumberInRange(r) {
 function generateSeed() {
   return String(Math.floor(Math.random() * 1e9));
 }
+

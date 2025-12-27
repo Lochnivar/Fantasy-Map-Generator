@@ -1,6 +1,14 @@
 "use strict";
 
-window.Provinces = (function () {
+/**
+ * Provinces Module
+ * Handles province generation and management.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Provinces = (function () {
   const forms = {
     Monarchy: {County: 22, Earldom: 6, Shire: 2, Landgrave: 2, Margrave: 2, Barony: 2, Captaincy: 1, Seneschalty: 1},
     Republic: {Province: 6, Department: 2, Governorate: 2, District: 1, Canton: 1, Prefecture: 1},
@@ -255,3 +263,13 @@ window.Provinces = (function () {
 
   return {generate, getPoles};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Provinces = Provinces;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Provinces = Provinces;

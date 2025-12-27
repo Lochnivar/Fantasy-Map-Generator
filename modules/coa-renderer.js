@@ -1,6 +1,14 @@
 "use strict";
 
-window.COArenderer = (function () {
+/**
+ * COA Renderer Module
+ * Handles rendering of coat of arms to SVG.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const COArenderer = (function () {
   const colors = {
     argent: "#fafafa",
     or: "#ffe066",
@@ -1968,7 +1976,7 @@ window.COArenderer = (function () {
         return g.outerHTML;
       })
       .catch(err => {
-        ERROR && console.error(err);
+        FMG.Utils.Logger.error(err);
       });
     return fetched;
   }
@@ -2042,3 +2050,13 @@ window.COArenderer = (function () {
 
   return {trigger, add, shieldPaths};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.COArenderer = COArenderer;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.COArenderer = COArenderer;

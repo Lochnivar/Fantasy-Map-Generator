@@ -5,7 +5,7 @@
 function clipPoly(points, secure = 0) {
   if (points.length < 2) return points;
   if (points.some(point => point === undefined)) {
-    ERROR && console.error("Undefined point in clipPoly", points);
+    FMG.Utils.Logger.error("Undefined point in clipPoly", points);
     return points;
   }
 
@@ -154,7 +154,7 @@ void (function () {
 
   window.prompt = function (promptText = defaultText, options = defaultOptions, callback) {
     if (options.default === undefined)
-      return ERROR && console.error("Prompt: options object does not have default value defined");
+      return FMG.Utils.Logger.error("Prompt: options object does not have default value defined");
 
     const input = prompt.querySelector("#promptInput");
     prompt.querySelector("#promptText").innerHTML = promptText;
@@ -188,3 +188,4 @@ void (function () {
     prompt.style.display = "none";
   });
 })();
+

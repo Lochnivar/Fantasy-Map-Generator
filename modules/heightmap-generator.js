@@ -1,6 +1,14 @@
 "use strict";
 
-window.HeightmapGenerator = (function () {
+/**
+ * Heightmap Generator Module
+ * Handles heightmap generation from templates and images.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const HeightmapGenerator = (function () {
   let grid = null;
   let heights = null;
   let blobPower;
@@ -62,13 +70,13 @@ window.HeightmapGenerator = (function () {
   };
 
   const generate = async function (graph) {
-    TIME && console.time("defineHeightmap");
+    FMG.Utils.Logger.time("defineHeightmap");
     const id = byId("templateInput").value;
 
     Math.random = aleaPRNG(seed);
     const isTemplate = id in heightmapTemplates;
     const heights = isTemplate ? fromTemplate(graph, id) : await fromPrecreated(graph, id);
-    TIME && console.timeEnd("defineHeightmap");
+    FMG.Utils.Logger.timeEnd("defineHeightmap");
 
     clearData();
     return heights;
@@ -507,7 +515,7 @@ window.HeightmapGenerator = (function () {
 
   function getPointInRange(range, length) {
     if (typeof range !== "string") {
-      ERROR && console.error("Range should be a string");
+      FMG.Utils.Logger.error("Range should be a string");
       return;
     }
 
@@ -541,3 +549,13 @@ window.HeightmapGenerator = (function () {
     invert
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.HeightmapGenerator = HeightmapGenerator;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.HeightmapGenerator = HeightmapGenerator;

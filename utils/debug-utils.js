@@ -70,3 +70,4 @@ function drawPath(points, {color = "red", width = 0.5}) {
     .attr("stroke-width", width)
     .attr("fill", "none");
 }
+

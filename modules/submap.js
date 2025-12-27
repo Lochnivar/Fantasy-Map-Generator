@@ -1,6 +1,14 @@
 "use strict";
 
-window.Submap = (function () {
+/**
+ * Submap Module
+ * Handles submap generation and resampling from parent maps.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Submap = (function () {
   const isWater = (pack, id) => pack.cells.h[id] < 20;
   const inMap = (x, y) => x > 0 && x < graphWidth && y > 0 && y < graphHeight;
 
@@ -23,14 +31,14 @@ window.Submap = (function () {
   function resample(parentMap, options) {
     const projection = options.projection;
     const inverse = options.inverse;
-    const stage = s => INFO && console.info("SUBMAP:", s);
+    const stage = s => FMG.Utils.Logger.info("SUBMAP:", s);
     const timeStart = performance.now();
     invokeActiveZooming();
 
     // copy seed
     seed = parentMap.seed;
     Math.random = aleaPRNG(seed);
-    INFO && console.group("SubMap with seed: " + seed);
+    FMG.Utils.Logger.group("SubMap with seed: " + seed);
 
     applyGraphSize();
     grid = generateGrid();
@@ -182,7 +190,7 @@ window.Submap = (function () {
       }
 
       if (isWater(pack, id) !== isWater(parentMap.pack, oldid)) {
-        WARN && console.warn("Type discrepancy detected:", id, oldid, `${pack.cells.t[id]} != ${oldCells.t[oldid]}`);
+        FMG.Utils.Logger.warn("Type discrepancy detected:", id, oldid, `${pack.cells.t[id]} != ${oldCells.t[oldid]}`);
       }
 
       cells.culture[id] = oldCells.culture[oldid];
@@ -294,9 +302,9 @@ window.Submap = (function () {
     notes = parentMap.notes;
     stage("Submap done");
 
-    WARN && console.warn(`TOTAL: ${rn((performance.now() - timeStart) / 1000, 2)}s`);
+    FMG.Utils.Logger.warn(`TOTAL: ${rn((performance.now() - timeStart) / 1000, 2)}s`);
     showStatistics();
-    INFO && console.groupEnd("Generated Map " + seed);
+    FMG.Utils.Logger.groupEnd("Generated Map " + seed);
   }
 
   /* find the nearest cell accepted by filter f *and* having at
@@ -367,7 +375,7 @@ window.Submap = (function () {
       if (searchFunc) {
         const [newCell, neighbor] = searchFunc(b.x, b.y);
         if (!newCell) {
-          WARN && console.warn(`Can not relocate Burg: ${b.name} sunk and destroyed. :-(`);
+          FMG.Utils.Logger.warn(`Can not relocate Burg: ${b.name} sunk and destroyed. :-(`);
           b.cell = null;
           b.removed = true;
           return;
@@ -405,3 +413,13 @@ window.Submap = (function () {
   // export
   return {resample, findNearest};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Submap = Submap;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Submap = Submap;

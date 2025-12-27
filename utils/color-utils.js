@@ -47,3 +47,4 @@ function getMixedColor(color, mix = 0.2, bright = 0.3) {
   const c = color && color[0] === "#" ? color : getRandomColor(); // if provided color is not hex (e.g. harching), generate random one
   return d3.color(d3.interpolate(c, getRandomColor())(mix)).brighter(bright).hex();
 }
+

@@ -1,6 +1,14 @@
 "use strict";
 
-window.COA = (function () {
+/**
+ * COA (Coat of Arms) Generator Module
+ * Handles coat of arms generation and management.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const COA = (function () {
   const tinctures = {
     field: {metals: 3, colours: 4, stains: +P(0.03), patterns: 1},
     division: {metals: 5, colours: 8, stains: +P(0.03), patterns: 1},
@@ -2200,7 +2208,7 @@ window.COA = (function () {
 
     if (emblemShape.value === "state" && state && pack.states[state].coa) return pack.states[state].coa.shield;
     if (pack.cultures[culture].shield) return pack.cultures[culture].shield;
-    ERROR && console.error("Shield shape is not defined on culture level", pack.cultures[culture]);
+    FMG.Utils.Logger.error("Shield shape is not defined on culture level", pack.cultures[culture]);
     return "heater";
   };
 
@@ -2209,3 +2217,13 @@ window.COA = (function () {
 
   return {generate, toString, copy, getShield, shields};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.COA = COA;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.COA = COA;

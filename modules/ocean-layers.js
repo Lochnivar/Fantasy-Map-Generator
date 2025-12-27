@@ -1,6 +1,14 @@
 "use strict";
 
-window.OceanLayers = (function () {
+/**
+ * Ocean Layers Module
+ * Handles ocean layer generation and rendering.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const OceanLayers = (function () {
   let cells, vertices, pointsN, used;
 
   const OceanLayers = function OceanLayers() {
@@ -90,3 +98,13 @@ window.OceanLayers = (function () {
 
   return OceanLayers;
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.OceanLayers = OceanLayers;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.OceanLayers = OceanLayers;

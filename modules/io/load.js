@@ -6,7 +6,7 @@ async function quickLoad() {
   if (blob) loadMapPrompt(blob);
   else {
     tip("No map stored. Save map to browser storage first", true, "error", 2000);
-    ERROR && console.error("No map stored");
+    FMG.Utils.Logger.error("No map stored");
   }
 }
 
@@ -32,7 +32,7 @@ async function createSharableDropboxLink() {
     sharableLink.setAttribute("href", finalLink);
     sharableLinkContainer.style.display = "block";
   } catch (error) {
-    ERROR && console.error(error);
+    FMG.Utils.Logger.error(error);
     return tip("Dropbox API error. Can not create link.", true, "error", 2000);
   }
 }
@@ -61,11 +61,11 @@ function loadMapPrompt(blob) {
   });
 
   function loadLastSavedMap() {
-    WARN && console.warn("Load last saved map");
+    FMG.Utils.Logger.warn("Load last saved map");
     try {
       uploadMap(blob);
     } catch (error) {
-      ERROR && console.error(error);
+      FMG.Utils.Logger.error(error);
       tip("Cannot load last saved map", true, "error", 2000);
     }
   }
@@ -87,7 +87,7 @@ function loadMapFromURL(maplink, random) {
 }
 
 function showUploadErrorMessage(error, URL, random) {
-  ERROR && console.error(error);
+  FMG.Utils.Logger.error(error);
   alertMessage.innerHTML = /* html */ `Cannot load map from the ${link(URL, "link provided")}. ${
     random ? `A new random map is generated. ` : ""
   } Please ensure the
@@ -145,7 +145,7 @@ async function uncompress(compressedData) {
 
     return new Uint8Array(uncompressedData);
   } catch (error) {
-    ERROR && console.error(error);
+    FMG.Utils.Logger.error(error);
     return null;
   }
 }
@@ -175,7 +175,7 @@ async function parseLoadedResult(result) {
     const uncompressedData = await uncompress(result); // file can be gzip compressed
     if (uncompressedData) return parseLoadedResult(uncompressedData);
 
-    ERROR && console.error(error);
+    FMG.Utils.Logger.error(error);
     return {mapData: null, mapVersion: null};
   }
 }
@@ -197,7 +197,7 @@ function showUploadMessage(type, mapData, mapVersion) {
     message = `The map version you are trying to load (${mapVersion}) is newer than the current version.<br>Please load the file in the appropriate version`;
     title = "Newer file";
   } else if (type === "outdated") {
-    INFO && console.info(`Loading map. Auto-updating from ${mapVersion} to ${VERSION}`);
+    FMG.Utils.Logger.info(`Loading map. Auto-updating from ${mapVersion} to ${VERSION}`);
     parseLoadedData(mapData, mapVersion);
     return;
   }
@@ -226,8 +226,8 @@ async function parseLoadedData(data, mapVersion) {
       if (params[3]) {
         seed = params[3];
         optionsSeed.value = seed;
-        INFO && console.group("Loaded Map " + seed);
-      } else INFO && console.group("Loaded Map");
+        FMG.Utils.Logger.group("Loaded Map " + seed);
+      } else FMG.Utils.Logger.group("Loaded Map");
       if (params[4]) graphWidth = +params[4];
       if (params[5]) graphHeight = +params[5];
       mapId = params[6] ? +params[6] : Date.now();
@@ -506,7 +506,7 @@ async function parseLoadedData(data, mapVersion) {
       invalidStates.forEach(s => {
         const invalidCells = cells.i.filter(i => cells.state[i] === s);
         invalidCells.forEach(i => (cells.state[i] = 0));
-        ERROR && console.error("[Data integrity] Invalid state", s, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid state", s, "is assigned to cells", invalidCells);
       });
 
       const invalidProvinces = [...new Set(cells.province)].filter(
@@ -515,14 +515,14 @@ async function parseLoadedData(data, mapVersion) {
       invalidProvinces.forEach(p => {
         const invalidCells = cells.i.filter(i => cells.province[i] === p);
         invalidCells.forEach(i => (cells.province[i] = 0));
-        ERROR && console.error("[Data integrity] Invalid province", p, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid province", p, "is assigned to cells", invalidCells);
       });
 
       const invalidCultures = [...new Set(cells.culture)].filter(c => !pack.cultures[c] || pack.cultures[c].removed);
       invalidCultures.forEach(c => {
         const invalidCells = cells.i.filter(i => cells.culture[i] === c);
         invalidCells.forEach(i => (cells.province[i] = 0));
-        ERROR && console.error("[Data integrity] Invalid culture", c, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid culture", c, "is assigned to cells", invalidCells);
       });
 
       const invalidReligions = [...new Set(cells.religion)].filter(
@@ -531,14 +531,14 @@ async function parseLoadedData(data, mapVersion) {
       invalidReligions.forEach(r => {
         const invalidCells = cells.i.filter(i => cells.religion[i] === r);
         invalidCells.forEach(i => (cells.religion[i] = 0));
-        ERROR && console.error("[Data integrity] Invalid religion", r, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid religion", r, "is assigned to cells", invalidCells);
       });
 
       const invalidFeatures = [...new Set(cells.f)].filter(f => f && !pack.features[f]);
       invalidFeatures.forEach(f => {
         const invalidCells = cells.i.filter(i => cells.f[i] === f);
         // No fix as for now
-        ERROR && console.error("[Data integrity] Invalid feature", f, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid feature", f, "is assigned to cells", invalidCells);
       });
 
       const invalidBurgs = [...new Set(cells.burg)].filter(
@@ -547,7 +547,7 @@ async function parseLoadedData(data, mapVersion) {
       invalidBurgs.forEach(burgId => {
         const invalidCells = cells.i.filter(i => cells.burg[i] === burgId);
         invalidCells.forEach(i => (cells.burg[i] = 0));
-        ERROR && console.error("[Data integrity] Invalid burg", burgId, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid burg", burgId, "is assigned to cells", invalidCells);
       });
 
       const invalidRivers = [...new Set(cells.r)].filter(r => r && !pack.rivers.find(river => river.i === r));
@@ -555,20 +555,20 @@ async function parseLoadedData(data, mapVersion) {
         const invalidCells = cells.i.filter(i => cells.r[i] === r);
         invalidCells.forEach(i => (cells.r[i] = 0));
         rivers.select("river" + r).remove();
-        ERROR && console.error("[Data integrity] Invalid river", r, "is assigned to cells", invalidCells);
+        FMG.Utils.Logger.error("[Data integrity] Invalid river", r, "is assigned to cells", invalidCells);
       });
 
       pack.burgs.forEach(burg => {
         if (typeof burg.capital === "boolean") burg.capital = Number(burg.capital);
 
         if (!burg.i && burg.lock) {
-          ERROR && console.error(`[Data integrity] Burg 0 is marked as locked, removing the status`);
+          FMG.Utils.Logger.error(`[Data integrity] Burg 0 is marked as locked, removing the status`);
           delete burg.lock;
           return;
         }
 
         if (burg.removed && burg.lock) {
-          ERROR && console.error(`[Data integrity] Removed burg ${burg.i} is marked as locked. Unlocking the burg`);
+          FMG.Utils.Logger.error(`[Data integrity] Removed burg ${burg.i} is marked as locked. Unlocking the burg`);
           delete burg.lock;
           return;
         }
@@ -582,29 +582,29 @@ async function parseLoadedData(data, mapVersion) {
         }
 
         if (burg.port < 0) {
-          ERROR && console.error("[Data integrity] Burg", burg.i, "has invalid port value", burg.port);
+          FMG.Utils.Logger.error("[Data integrity] Burg", burg.i, "has invalid port value", burg.port);
           burg.port = 0;
         }
 
         if (burg.cell >= cells.i.length) {
-          ERROR && console.error("[Data integrity] Burg", burg.i, "is linked to invalid cell", burg.cell);
+          FMG.Utils.Logger.error("[Data integrity] Burg", burg.i, "is linked to invalid cell", burg.cell);
           burg.cell = findCell(burg.x, burg.y);
           cells.i.filter(i => cells.burg[i] === burg.i).forEach(i => (cells.burg[i] = 0));
           cells.burg[burg.cell] = burg.i;
         }
 
         if (burg.state && !pack.states[burg.state]) {
-          ERROR && console.error("[Data integrity] Burg", burg.i, "is linked to invalid state", burg.state);
+          FMG.Utils.Logger.error("[Data integrity] Burg", burg.i, "is linked to invalid state", burg.state);
           burg.state = 0;
         }
 
         if (burg.state && pack.states[burg.state].removed) {
-          ERROR && console.error("[Data integrity] Burg", burg.i, "is linked to removed state", burg.state);
+          FMG.Utils.Logger.error("[Data integrity] Burg", burg.i, "is linked to removed state", burg.state);
           burg.state = 0;
         }
 
         if (burg.state === undefined) {
-          ERROR && console.error("[Data integrity] Burg", burg.i, "has no state data");
+          FMG.Utils.Logger.error("[Data integrity] Burg", burg.i, "has no state data");
           burg.state = 0;
         }
       });
@@ -635,7 +635,7 @@ async function parseLoadedData(data, mapVersion) {
           const message = `[Data integrity] State ${state.i} has multiple capitals (${capitalBurgs
             .map(b => b.i)
             .join(", ")}) assigned. Keeping the first as capital and moving others to towns`;
-          ERROR && console.error(message);
+          FMG.Utils.Logger.error(message);
 
           capitalBurgs.forEach((burg, i) => {
             if (!i) return;
@@ -666,7 +666,7 @@ async function parseLoadedData(data, mapVersion) {
 
       pack.routes.forEach(route => {
         if (!route.points || route.points.length < 2) {
-          ERROR && console.error(`[Data integrity] Route ${route.i} has less than 2 points. Removing the route`);
+          FMG.Utils.Logger.error(`[Data integrity] Route ${route.i} has less than 2 points. Removing the route`);
           Routes.remove(route);
         }
       });
@@ -698,7 +698,7 @@ async function parseLoadedData(data, mapVersion) {
 
         pack.markers.forEach(marker => {
           if (markerIds[marker.i]) {
-            ERROR && console.error("[Data integrity] Marker", marker.i, "has non-unique id. Changing to", nextId);
+            FMG.Utils.Logger.error("[Data integrity] Marker", marker.i, "has non-unique id. Changing to", nextId);
 
             const domElements = document.querySelectorAll("#marker" + marker.i);
             if (domElements[1]) domElements[1].id = "marker" + nextId; // rename 2nd dom element
@@ -736,36 +736,13 @@ async function parseLoadedData(data, mapVersion) {
       fitMapToScreen();
     }
 
-    WARN && console.warn(`TOTAL: ${rn((performance.now() - uploadMap.timeStart) / 1000, 2)}s`);
+    FMG.Utils.Logger.warn(`TOTAL: ${rn((performance.now() - uploadMap.timeStart) / 1000, 2)}s`);
     showStatistics();
-    INFO && console.groupEnd("Loaded Map " + seed);
+    FMG.Utils.Logger.groupEnd("Loaded Map " + seed);
     tip("Map is successfully loaded", true, "success", 7000);
   } catch (error) {
-    ERROR && console.error(error);
+    FMG.Utils.Logger.error(error);
     clearMainTip();
-
-    alertMessage.innerHTML = /* html */ `An error is occured on map loading. Select a different file to load, <br>generate a new random map or cancel the loading.<br>Map version: ${mapVersion}. Generator version: ${VERSION}.
-      <p id="errorBox">${parseError(error)}</p>`;
-
-    $("#alert").dialog({
-      resizable: false,
-      title: "Loading error",
-      maxWidth: "40em",
-      buttons: {
-        "Clear cache": () => cleanupData(),
-        "Select file": function () {
-          $(this).dialog("close");
-          mapToLoad.click();
-        },
-        "New map": function () {
-          $(this).dialog("close");
-          regenerateMap("loading error");
-        },
-        Cancel: function () {
-          $(this).dialog("close");
-        }
-      },
-      position: {my: "center", at: "center", of: "svg"}
-    });
+    FMG.Utils.Dialog.showLoadingError(error, mapVersion);
   }
 }

@@ -8072,21 +8072,32 @@
     <script src="libs/delaunator.min.js"></script>
     <script src="libs/indexedDB.js?v=1.99.00"></script>
 
+    <!-- Core namespace and state management - Load FIRST -->
+    <script src="core/namespace.js"></script>
+    <script src="config/constants.js"></script>
+    <script src="core/state.js"></script>
+
     <script src="utils/shorthands.js?v=1.106.0"></script>
-    <script src="utils/commonUtils.js?v=1.103.0"></script>
-    <script src="utils/arrayUtils.js?v=1.99.00"></script>
-    <script src="utils/functionUtils.js?v=1.99.00"></script>
-    <script src="utils/colorUtils.js?v=1.99.00"></script>
-    <script src="utils/graphUtils.js?v=1.106.0"></script>
-    <script src="utils/nodeUtils.js?v=1.99.00"></script>
-    <script src="utils/numberUtils.js?v=1.99.00"></script>
+    <script src="utils/common-utils.js?v=1.103.0"></script>
+    <script src="utils/array-utils.js?v=1.99.00"></script>
+    <script src="utils/function-utils.js?v=1.99.00"></script>
+    <script src="utils/color-utils.js?v=1.99.00"></script>
+    <script src="utils/graph-utils.js?v=1.106.0"></script>
+    <script src="utils/node-utils.js?v=1.99.00"></script>
+    <script src="utils/number-utils.js?v=1.99.00"></script>
     <script src="utils/polyfills.js?v=1.99.00"></script>
-    <script src="utils/probabilityUtils.js?v=1.99.05"></script>
-    <script src="utils/stringUtils.js?v=1.106.0"></script>
-    <script src="utils/languageUtils.js?v=1.108.11"></script>
-    <script src="utils/unitUtils.js?v=1.99.00"></script>
-    <script src="utils/pathUtils.js?v=1.106.0"></script>
-    <script defer src="utils/debugUtils.js?v=1.106.0"></script>
+    <script src="utils/probability-utils.js?v=1.99.05"></script>
+    <script src="utils/string-utils.js?v=1.106.0"></script>
+    <script src="utils/language-utils.js?v=1.108.11"></script>
+    <script src="utils/unit-utils.js?v=1.99.00"></script>
+    <script src="utils/path-utils.js?v=1.106.0"></script>
+    <script defer src="utils/debug-utils.js?v=1.106.0"></script>
+    <script src="utils/logger.js"></script>
+    <script src="utils/dialog-utils.js"></script>
+    <script src="utils/error-handler.js"></script>
+    
+    <!-- Utilities aggregator - Load AFTER all utility files -->
+    <script src="utils/index.js"></script>
 
     <script src="modules/voronoi.js"></script>
     <script src="config/heightmap-templates.js"></script>
@@ -8160,6 +8171,10 @@
     <script defer src="modules/ui/submap-tool.js?v=1.106.2"></script>
     <script defer src="modules/ui/transform-tool.js?v=1.106.2"></script>
     <script defer src="modules/ui/hotkeys.js?v=1.104.0"></script>
+    
+    <!-- UI components aggregator - Load AFTER all UI files -->
+    <script defer src="modules/ui/index.js"></script>
+    
     <script defer src="modules/coa-renderer.js?v=1.99.00"></script>
     <script defer src="libs/rgbquant.min.js"></script>
     <script defer src="libs/jquery.ui.touch-punch.min.js"></script>
@@ -8180,5 +8195,8 @@
     <script defer src="modules/renderers/draw-burg-labels.js?v=1.108.1"></script>
     <script defer src="modules/renderers/draw-burg-icons.js?v=1.104.0"></script>
     <script defer src="modules/renderers/draw-relief-icons.js?v=1.108.4"></script>
+    
+    <!-- Renderers aggregator - Load AFTER all renderer files -->
+    <script defer src="modules/renderers/index.js"></script>
   </body>
 </html>

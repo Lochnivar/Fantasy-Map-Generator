@@ -1,7 +1,18 @@
 "use strict";
 
-window.Biomes = (function () {
-  const MIN_LAND_HEIGHT = 20;
+/**
+ * Biomes Module
+ * Handles biome generation and definition for the map.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Biomes = (function () {
+  // Use constant from config if available, otherwise use local constant
+  const MIN_LAND_HEIGHT = (window.FMG && window.FMG.Config && window.FMG.Config.Map) 
+    ? window.FMG.Config.Map.MIN_LAND_HEIGHT 
+    : 20;
 
   const getDefault = () => {
     const name = [
@@ -126,3 +137,13 @@ window.Biomes = (function () {
 
   return {getDefault, define, getId};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Biomes = Biomes;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Biomes = Biomes;

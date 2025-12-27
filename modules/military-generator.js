@@ -1,8 +1,16 @@
 "use strict";
 
-window.Military = (function () {
+/**
+ * Military Module
+ * Handles military unit generation and management.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Military = (function () {
   const generate = function () {
-    TIME && console.time("generateMilitary");
+    FMG.Utils.Logger.time("generateMilitary");
     const {cells, states} = pack;
     const {p} = cells;
     const valid = states.filter(s => s.i && !s.removed); // valid states
@@ -310,7 +318,7 @@ window.Military = (function () {
       return regiments;
     }
 
-    TIME && console.timeEnd("generateMilitary");
+    FMG.Utils.Logger.timeEnd("generateMilitary");
   };
 
   const getDefaultOptions = function () {
@@ -392,3 +400,13 @@ window.Military = (function () {
     getEmblem
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Military = Military;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Military = Military;

@@ -1,6 +1,14 @@
 "use strict";
 
-window.BurgsAndStates = (() => {
+/**
+ * Burgs and States Module
+ * Handles city (burg) and state generation, expansion, and management.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const BurgsAndStates = (() => {
   const generate = () => {
     const {cells, cultures} = pack;
     const n = cells.i.length;
@@ -884,3 +892,13 @@ window.BurgsAndStates = (() => {
     getCloseToEdgePoint
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.BurgsAndStates = BurgsAndStates;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.BurgsAndStates = BurgsAndStates;

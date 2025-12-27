@@ -158,17 +158,17 @@ function connectVertices({vertices, startingVertex, ofSameType, addToChecked, cl
     else if (v3 !== previous && c1 !== c3) next = v3;
 
     if (next >= vertices.c.length) {
-      ERROR && console.error("ConnectVertices: next vertex is out of bounds");
+      FMG.Utils.Logger.error("ConnectVertices: next vertex is out of bounds");
       break;
     }
 
     if (next === current) {
-      ERROR && console.error("ConnectVertices: next vertex is not found");
+      FMG.Utils.Logger.error("ConnectVertices: next vertex is not found");
       break;
     }
 
     if (i === MAX_ITERATIONS) {
-      ERROR && console.error("ConnectVertices: max iterations reached", MAX_ITERATIONS);
+      FMG.Utils.Logger.error("ConnectVertices: max iterations reached", MAX_ITERATIONS);
       break;
     }
   }
@@ -233,3 +233,4 @@ function restorePath(exit, start, from) {
 
   return pathCells.reverse();
 }
+

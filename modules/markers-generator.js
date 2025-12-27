@@ -104,7 +104,7 @@ window.Markers = (function () {
   };
 
   function generateTypes() {
-    TIME && console.time("addMarkers");
+    FMG.Utils.Logger.time("addMarkers");
 
     config.forEach(({type, icon, dx, dy, px, min, each, multiplier, list, add}) => {
       if (multiplier === 0) return;
@@ -124,7 +124,7 @@ window.Markers = (function () {
     });
 
     occupied = [];
-    TIME && console.timeEnd("addMarkers");
+    FMG.Utils.Logger.timeEnd("addMarkers");
   }
 
   function getQuantity(array, min, each, multiplier) {
@@ -1285,3 +1285,13 @@ window.Markers = (function () {
 
   return {add, generate, regenerate, getConfig, setConfig, deleteMarker};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Markers = Markers;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Markers = Markers;

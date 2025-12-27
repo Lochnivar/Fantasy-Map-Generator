@@ -1,6 +1,14 @@
 "use strict";
 
-window.Zones = (function () {
+/**
+ * Zones Module
+ * Handles zone generation (invasions, rebels, proselytism, crusades, diseases, disasters).
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Zones = (function () {
   const config = {
     invasion: {quantity: 2, generate: addInvasion}, // invasion of enemy lands
     rebels: {quantity: 1.5, generate: addRebels}, // rebels along a state border
@@ -16,7 +24,7 @@ window.Zones = (function () {
   };
 
   const generate = function (globalModifier = 1) {
-    TIME && console.time("generateZones");
+    FMG.Utils.Logger.time("generateZones");
 
     const usedCells = new Uint8Array(pack.cells.i.length);
     pack.zones = [];
@@ -27,7 +35,7 @@ window.Zones = (function () {
       while (number--) type.generate(usedCells);
     });
 
-    TIME && console.timeEnd("generateZones");
+    FMG.Utils.Logger.timeEnd("generateZones");
   };
 
   function addInvasion(usedCells) {
@@ -452,3 +460,13 @@ window.Zones = (function () {
 
   return {generate};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Zones = Zones;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Zones = Zones;

@@ -24,3 +24,4 @@ function normalize(val, min, max) {
 function lerp(a, b, t) {
   return a + (b - a) * t;
 }
+

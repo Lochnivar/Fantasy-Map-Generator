@@ -1,6 +1,14 @@
 "use strict";
 
-window.ThreeD = (function () {
+/**
+ * ThreeD Module
+ * Handles 3D rendering of the map using Three.js.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const ThreeD = (function () {
   const options = {
     scale: 50,
     lightness: 0.6,
@@ -726,3 +734,13 @@ window.ThreeD = (function () {
     saveOBJ
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.ThreeD = ThreeD;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.ThreeD = ThreeD;

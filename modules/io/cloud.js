@@ -139,3 +139,13 @@ window.Cloud = (function () {
   const providers = {dropbox: DBP};
   return {providers};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Cloud = Cloud;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Cloud = Cloud;

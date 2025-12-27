@@ -1,6 +1,14 @@
 "use strict";
 
-window.Names = (function () {
+/**
+ * Names Module
+ * Handles name generation using Markov chains for cultures, states, and locations.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Names = (function () {
   let chains = [];
 
   // calculate Markov chain for a namesbase
@@ -326,3 +334,13 @@ window.Names = (function () {
     calculateChain
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Names = Names;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Names = Names;

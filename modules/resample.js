@@ -1,6 +1,14 @@
 "use strict";
 
-window.Resample = (function () {
+/**
+ * Resample Module
+ * Handles map resampling and projection transformations.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Resample = (function () {
   /*
     generate new map based on an existing one (resampling parentMap)
     parentMap: {grid, pack, notes} from original map
@@ -176,7 +184,7 @@ window.Resample = (function () {
       const cell = isWater(pack, closestCell) ? findLandCell(xp, yp) : closestCell;
 
       if (pack.cells.burg[cell]) {
-        WARN && console.warn(`Cell ${cell} already has a burg. Removing burg ${burg.name} (${burg.i})`);
+        FMG.Utils.Logger.warn(`Cell ${cell} already has a burg. Removing burg ${burg.name} (${burg.i})`);
         return {...burg, removed: true, lock: false};
       }
 
@@ -365,3 +373,13 @@ window.Resample = (function () {
 
   return {process};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Resample = Resample;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Resample = Resample;

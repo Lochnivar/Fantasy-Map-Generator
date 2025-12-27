@@ -1,6 +1,14 @@
 "use strict";
 
-window.Religions = (function () {
+/**
+ * Religions Module
+ * Handles religion generation, deity names, and culture updates.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Religions = (function () {
   // name generation approach and relative chance to be selected
   const approach = {
     Number: 1,
@@ -926,3 +934,13 @@ window.Religions = (function () {
 
   return {generate, add, getDeityName, updateCultures, recalculate};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Religions = Religions;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Religions = Religions;

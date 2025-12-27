@@ -24,7 +24,7 @@ function generateGrid() {
 
 // place random points to calculate Voronoi diagram
 function placePoints() {
-  TIME && console.time("placePoints");
+  FMG.Utils.Logger.time("placePoints");
   const cellsDesired = +byId("pointsInput").dataset.cells;
   const spacing = rn(Math.sqrt((graphWidth * graphHeight) / cellsDesired), 2); // spacing between points before jirrering
 
@@ -32,25 +32,25 @@ function placePoints() {
   const points = getJitteredGrid(graphWidth, graphHeight, spacing); // points of jittered square grid
   const cellsX = Math.floor((graphWidth + 0.5 * spacing - 1e-10) / spacing);
   const cellsY = Math.floor((graphHeight + 0.5 * spacing - 1e-10) / spacing);
-  TIME && console.timeEnd("placePoints");
+  FMG.Utils.Logger.timeEnd("placePoints");
 
   return {spacing, cellsDesired, boundary, points, cellsX, cellsY};
 }
 
 // calculate Delaunay and then Voronoi diagram
 function calculateVoronoi(points, boundary) {
-  TIME && console.time("calculateDelaunay");
+  FMG.Utils.Logger.time("calculateDelaunay");
   const allPoints = points.concat(boundary);
   const delaunay = Delaunator.from(allPoints);
-  TIME && console.timeEnd("calculateDelaunay");
+  FMG.Utils.Logger.timeEnd("calculateDelaunay");
 
-  TIME && console.time("calculateVoronoi");
+  FMG.Utils.Logger.time("calculateVoronoi");
   const voronoi = new Voronoi(delaunay, allPoints, points.length);
 
   const cells = voronoi.cells;
   cells.i = createTypedArray({maxValue: points.length, length: points.length}).map((_, i) => i); // array of indexes
   const vertices = voronoi.vertices;
-  TIME && console.timeEnd("calculateVoronoi");
+  FMG.Utils.Logger.timeEnd("calculateVoronoi");
 
   return {cells, vertices};
 }
@@ -80,8 +80,8 @@ function getBoundaryPoints(width, height, spacing) {
 
 // get points on a regular square grid and jitter them a bit
 function getJitteredGrid(width, height, spacing) {
-  const radius = spacing / 2; // square radius
-  const jittering = radius * 0.9; // max deviation
+  const radius = spacing * FMG.Config.Generation.SPACING_RADIUS_RATIO; // square radius
+  const jittering = radius * FMG.Config.Generation.JITTERING_MULTIPLIER; // max deviation
   const doubleJittering = jittering * 2;
   const jitter = () => Math.random() * doubleJittering - jittering;
 
@@ -249,7 +249,7 @@ void (function addFindAll() {
     while ((t.q = t.quads.pop())) {
       i++;
 
-      // Stop searching if this quadrant can’t contain a closer node.
+      // Stop searching if this quadrant can't contain a closer node.
       if (
         !(t.node = t.q.node) ||
         (t.x1 = t.q.x0) > t.x3 ||
@@ -280,7 +280,7 @@ void (function addFindAll() {
         }
       }
 
-      // Visit this point. (Visiting coincident points isn’t necessary!)
+      // Visit this point. (Visiting coincident points isn't necessary!)
       else {
         var dx = x - +this._x.call(null, t.node.data),
           dy = y - +this._y.call(null, t.node.data),
@@ -334,3 +334,4 @@ function drawHeights({heights, width, height, scheme, renderOcean}) {
   ctx.putImageData(imageData, 0, 0);
   return canvas.toDataURL("image/png");
 }
+

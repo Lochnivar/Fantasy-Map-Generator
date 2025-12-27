@@ -1,6 +1,14 @@
 "use strict";
 
-window.Rivers = (function () {
+/**
+ * Rivers Module
+ * Handles river generation, pathfinding, and specification.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Rivers = (function () {
   const generate = function (allowErosion = true) {
     TIME && console.time("generateRivers");
     Math.random = aleaPRNG(seed);
@@ -518,3 +526,13 @@ window.Rivers = (function () {
     getNextId
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Rivers = Rivers;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Rivers = Rivers;

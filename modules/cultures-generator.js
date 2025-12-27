@@ -1,6 +1,14 @@
 "use strict";
 
-window.Cultures = (function () {
+/**
+ * Cultures Module
+ * Handles culture generation, expansion, and management.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Cultures = (function () {
   let cells;
 
   const generate = function () {
@@ -616,3 +624,13 @@ window.Cultures = (function () {
 
   return {generate, add, expand, getDefault, getRandomShield};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Cultures = Cultures;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Cultures = Cultures;

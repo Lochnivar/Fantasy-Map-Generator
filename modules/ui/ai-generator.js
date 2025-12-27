@@ -137,7 +137,7 @@ async function handleStream(response, getContent) {
         const parsed = line.startsWith("data: ") ? JSON.parse(line.slice(6)) : JSON.parse(line);
         getContent(parsed);
       } catch (error) {
-        ERROR && console.error("Failed to parse line:", line, error);
+        FMG.Utils.Logger.error("Failed to parse line:", line, error);
       }
     }
 

@@ -1,6 +1,14 @@
 "use strict";
 
-window.Features = (function () {
+/**
+ * Features Module
+ * Handles geographic feature markup and specification (oceans, lakes, islands, etc.).
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Features = (function () {
   const DEEPER_LAND = 3;
   const LANDLOCKED = 2;
   const LAND_COAST = 1;
@@ -27,7 +35,7 @@ window.Features = (function () {
 
   // mark Grid features (ocean, lakes, islands) and calculate distance field
   function markupGrid() {
-    TIME && console.time("markupGrid");
+    FMG.Utils.Logger.time("markupGrid");
     Math.random = aleaPRNG(seed); // get the same result on heightmap edit in Erase mode
 
     const {h: heights, c: neighbors, b: borderCells, i} = grid.cells;
@@ -41,7 +49,7 @@ window.Features = (function () {
       const firstCell = queue[0];
       featureIds[firstCell] = featureId;
 
-      const land = heights[firstCell] >= 20;
+      const land = heights[firstCell] >= FMG.Config.Map.MIN_LAND_HEIGHT;
       let border = false; // set true if feature touches map edge
 
       while (queue.length) {
@@ -49,7 +57,7 @@ window.Features = (function () {
         if (!border && borderCells[cellId]) border = true;
 
         for (const neighborId of neighbors[cellId]) {
-          const isNeibLand = heights[neighborId] >= 20;
+          const isNeibLand = heights[neighborId] >= FMG.Config.Map.MIN_LAND_HEIGHT;
 
           if (land === isNeibLand && featureIds[neighborId] === UNMARKED) {
             featureIds[neighborId] = featureId;
@@ -74,12 +82,12 @@ window.Features = (function () {
     grid.cells.f = featureIds;
     grid.features = features;
 
-    TIME && console.timeEnd("markupGrid");
+    FMG.Utils.Logger.timeEnd("markupGrid");
   }
 
   // mark Pack features (ocean, lakes, islands), calculate distance field and add properties
   function markupPack() {
-    TIME && console.time("markupPack");
+    FMG.Utils.Logger.time("markupPack");
 
     const {cells, vertices} = pack;
     const {c: neighbors, b: borderCells, i} = cells;
@@ -141,7 +149,7 @@ window.Features = (function () {
     pack.cells.harbor = harbor;
     pack.features = features;
 
-    TIME && console.timeEnd("markupPack");
+    FMG.Utils.Logger.timeEnd("markupPack");
 
     function defineHaven(cellId) {
       const waterCells = neighbors[cellId].filter(isWater);
@@ -269,3 +277,13 @@ window.Features = (function () {
 
   return {markupGrid, markupPack, specify};
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Features = Features;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Features = Features;

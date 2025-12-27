@@ -10,7 +10,15 @@ const ROUTE_TYPE_MODIFIERS = {
   default: 8 // far ocean
 };
 
-window.Routes = (function () {
+/**
+ * Routes Module
+ * Handles route generation, pathfinding, and connectivity.
+ * 
+ * Migrated to FMG namespace structure while maintaining backward compatibility.
+ */
+
+// Create the module
+const Routes = (function () {
   function generate(lockedRoutes = []) {
     const {capitalsByFeature, burgsByFeature, portsByFeature} = sortBurgsByFeature(pack.burgs);
 
@@ -652,3 +660,13 @@ window.Routes = (function () {
     remove
   };
 })();
+
+// Export to new namespace structure
+if (typeof window.FMG !== 'undefined') {
+  window.FMG.Modules = window.FMG.Modules || {};
+  window.FMG.Modules.Routes = Routes;
+}
+
+// Backward compatibility: Keep old global export
+// This will be removed in a future phase after all code is migrated
+window.Routes = Routes;
